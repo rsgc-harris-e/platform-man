@@ -22,6 +22,9 @@ class GameScene: SKScene {
         koala.setScale(2)
         koala.position = CGPoint(x: size.width/2, y: 300)
         addChild(koala)
+        
+    //spawns obstacle after koala
+        spawnobstacle()
     
         
 }
@@ -52,6 +55,17 @@ class GameScene: SKScene {
 
        
 
+    }
+    //simple method for an enemy
+    func spawnobstacle(){
+        let snake = SKSpriteNode(imageNamed: "snake")
+        snake.setScale(0.5)
+        let startingposition = CGPoint(x: 2000, y: 300)
+        snake.position = startingposition
+        addChild(snake)
+        let endingposition = CGPoint(x:0, y: 300)
+        let ActionMove = SKAction.move(to: endingposition, duration: 10)
+        snake.run(ActionMove)
     }
 }
 
