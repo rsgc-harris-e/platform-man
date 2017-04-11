@@ -23,10 +23,13 @@ class GameScene: SKScene {
         koala.position = CGPoint(x: size.width/2, y: 300)
         addChild(koala)
         
-    //spawns obstacle after koala
-        spawnobstacle()
-    
-        
+    //periodically spawns obstacles
+        let spawnwait = SKAction.wait(forDuration:4) //set time between obstacle spawns
+        let actionspawn = SKAction.run() {[weak self]in self?.spawnobstacle()} //tell run function what function should be run
+        let actionsequence = SKAction.sequence([spawnwait,actionspawn])
+        let actionobstaclerepeat = SKAction.repeatForever(actionsequence)
+        run(actionobstaclerepeat)//function will now repeat itself forever
+
 }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
@@ -60,12 +63,15 @@ class GameScene: SKScene {
     func spawnobstacle(){
         let snake = SKSpriteNode(imageNamed: "snake")
         snake.setScale(0.5)
-        let startingposition = CGPoint(x: 2000, y: 300)
+       //defines the starting position of obstacle
+        let startingposition = CGPoint(x: 2000, y: 260)
         snake.position = startingposition
         addChild(snake)
-        let endingposition = CGPoint(x:0, y: 300)
+        let endingposition = CGPoint(x:0, y: 260)
         let ActionMove = SKAction.move(to: endingposition, duration: 10)
-        snake.run(ActionMove)
+        let actionremove = SKAction.removeFromParent()
+        let actionsequence = SKAction.sequence([ActionMove,actionremove])
+        snake.run(actionsequence)
     }
 }
 
