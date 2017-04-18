@@ -31,6 +31,11 @@ class GameScene: SKScene {
         run(actionobstaclerepeat)//function will now repeat itself forever
 
 }
+    //this function moves about 60 times per second
+    override func update(_ currentTime: TimeInterval) {
+        checkCollisions()
+    }
+        
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
@@ -61,17 +66,42 @@ class GameScene: SKScene {
     }
     //simple method for an enemy
     func spawnobstacle(){
+        //create instance of the obstacle
         let snake = SKSpriteNode(imageNamed: "snake")
         snake.setScale(0.5)
        //defines the starting position of obstacle
         let startingposition = CGPoint(x: 2000, y: 260)
         snake.position = startingposition
+        //create a name for the obstacle
+        snake.name = "snake"
         addChild(snake)
         let endingposition = CGPoint(x:0, y: 260)
         let ActionMove = SKAction.move(to: endingposition, duration: 10)
         let actionremove = SKAction.removeFromParent()
         let actionsequence = SKAction.sequence([ActionMove,actionremove])
         snake.run(actionsequence)
+    }
+    //this function checks for collsions between the koala and obstacles
+    func checkCollisions(){
+        var hitObstacles : [SKSpriteNode] = []
+        //find obstacles colliding with the koala
+        enumerateChildNodes(withName: "snake", using: {
+            node, _ in
+            
+            //get a reference to node that was found
+            let obstacle = node as! SKSpriteNode
+            //check to see if the obstacle is intersecting with the koala
+            if obstacle.frame.insetBy(dx: 10, dy: 10).intersects(self.koala.frame.insetBy(dx: 20, dy:20)){
+                hitObstacles.append(obstacle)
+            }
+        })
+        for obstacle in hitObstacles{
+            koalaHit(by: obstacle)
+        }
+    }
+    func koalaHit(by obstacle: SKSpriteNode){
+        obstacle.removeFromParent()
+        
     }
 }
 
