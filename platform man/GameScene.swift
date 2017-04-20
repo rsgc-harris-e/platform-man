@@ -11,6 +11,11 @@ import SpriteKit
 
 class GameScene: SKScene {
  let koala = SKSpriteNode(imageNamed: "koala") // we want to be able to manipulate the koala for the game
+    //label a variable to track score
+    
+    let scorelabel = SKLabelNode(fontNamed: "Calibri")
+    var score = 0 //this tracks score
+    
     
     override func didMove(to view: SKView){
         backgroundColor = SKColor.black
@@ -18,6 +23,7 @@ class GameScene: SKScene {
         background.position = CGPoint(x:size.width/2, y:size.height/2)//anchor image middle of screen horizontally and vertically as well
         background.size = self.frame.size
         background.zPosition = -1
+        //background established
         addChild(background)
         koala.setScale(2)
         koala.position = CGPoint(x: size.width/2, y: 300)
@@ -29,7 +35,13 @@ class GameScene: SKScene {
         let actionsequence = SKAction.sequence([spawnwait,actionspawn])
         let actionobstaclerepeat = SKAction.repeatForever(actionsequence)
         run(actionobstaclerepeat)//function will now repeat itself forever
-
+        //add display to show the score
+        scorelabel.text = String(score)
+        scorelabel.color = SKColor.yellow
+        scorelabel.fontSize = 48
+        scorelabel.zPosition = 150 //make sure display is above all other things in the scene
+        scorelabel.position = CGPoint(x:size.width - size.width/8, y: size.height - size.height/4)
+        addChild(scorelabel)
 }
     //this function moves about 60 times per second
     override func update(_ currentTime: TimeInterval) {
@@ -100,6 +112,12 @@ class GameScene: SKScene {
         }
     }
     func koalaHit(by obstacle: SKSpriteNode){
+        //reduce the score
+        score+=1
+        //update score label
+        scorelabel.text = String(score)
+
+        //snake node is removed from the program
         obstacle.removeFromParent()
         
     }
