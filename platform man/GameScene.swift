@@ -26,7 +26,7 @@ class GameScene: SKScene {
         //background established
         addChild(background)
         koala.setScale(2)
-        koala.position = CGPoint(x: size.width/2, y: 300)
+        koala.position = CGPoint(x: size.width/2, y: 400)
         addChild(koala)
         koala.physicsBody = SKPhysicsBody(rectangleOf: koala.frame.size)
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
@@ -57,8 +57,7 @@ class GameScene: SKScene {
         }
 
     }
-
-    //simple method for an enemy
+    //simple method for a sprite
     func spawnobstacle(){
         //create instance of the obstacle
         let snake = SKSpriteNode(imageNamed: "snake")
@@ -75,7 +74,7 @@ class GameScene: SKScene {
         let actionsequence = SKAction.sequence([ActionMove,actionremove])
         snake.run(actionsequence)
     }
-    //this function checks for collsions between the koala and obstacles
+       //this function checks for collisions between the koala and obstacles
     func checkCollisions(){
         var hitObstacles : [SKSpriteNode] = []
         //find obstacles colliding with the koala
@@ -85,7 +84,7 @@ class GameScene: SKScene {
             //get a reference to node that was found
             let obstacle = node as! SKSpriteNode
             //check to see if the obstacle is intersecting with the koala
-            if obstacle.frame.insetBy(dx: 10, dy: 10).intersects(self.koala.frame.insetBy(dx: 20, dy:20)){
+            if obstacle.frame.insetBy(dx:20,dy: 50).intersects(self.koala.frame.insetBy(dx:5,dy:10)){
                 hitObstacles.append(obstacle)
             }
         })
