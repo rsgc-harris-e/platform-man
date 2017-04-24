@@ -51,32 +51,13 @@ class GameScene: SKScene {
         checkCollisions()
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else {
-            return
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {        //get location of
+        if let body = koala.physicsBody{
+            body.applyImpulse(CGVector(dx:0,dy: 1200))
         }
-        //get location of first touch
-        let touchlocation = touch.location(in: self)
-        print(touchlocation.x)
-        print(touchlocation.y)
-        //moves koala horizontally
-        let destination = CGPoint(x: touchlocation.x, y: koala.position.y)
-        let actionMove = SKAction.move(to: destination, duration: 2)
-        koala.run(actionMove)
+
     }
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else {
-            return
-        }
-        //get location of first touch
-        let touchlocation = touch.location(in: self)
-        let destination = CGPoint(x: touchlocation.x, y: koala.position.y)
-        let actionMove = SKAction.move(to: destination, duration: 2)
-        koala.run(actionMove)
-        
-        
-        
-    }
+
     //simple method for an enemy
     func spawnobstacle(){
         //create instance of the obstacle
