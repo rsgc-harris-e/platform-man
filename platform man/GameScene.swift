@@ -84,7 +84,7 @@ class GameScene: SKScene {
         let horizontalposition = CGFloat(arc4random_uniform(UInt32(size.height)))
         //create instance of the obstacle
         //defines the starting position of obstacle
-        let startingposition = CGPoint(x: horizontalposition+700, y: 100)
+        let startingposition = CGPoint(x: horizontalposition+2000, y: 100)
         croc.position = startingposition
         //create a name for the obstacle
         croc.name = "croc"
