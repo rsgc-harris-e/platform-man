@@ -59,7 +59,7 @@ class GameScene: SKScene {
         if let body = koala.physicsBody{
             body.applyImpulse(CGVector(dx:0,dy: 1200))
         }
-
+        
     }
     //simple method for a sprite
     func spawnobstacle(){
@@ -78,35 +78,13 @@ class GameScene: SKScene {
         let actionsequence = SKAction.sequence([ActionMove,actionremove])
         snake.run(actionsequence)
     }
-    func spawncroc(){
-         let croc = SKSpriteNode(imageNamed: "croc")
-        croc.setScale(1)
-        let horizontalposition = CGFloat(arc4random_uniform(UInt32(size.height)))
-        //create instance of the obstacle
-        //defines the starting position of obstacle
-        let startingposition = CGPoint(x: horizontalposition+700, y: 100)
-        croc.position = startingposition
-        //create a name for the obstacle
-        croc.name = "croc"
-        addChild(croc)
-        let endingposition = CGPoint(x:0, y: 100)
-        
-        let ActionMove = SKAction.move(to: endingposition, duration: 10)
-        let actionremove = SKAction.removeFromParent()
-        //defines sequence for what should happen for the croc node
-        //it moves horizontally across the screen and if it goes off then it is removed from the game
-        //ActionMove is run and actionremove is removing the node
-        let actionsequence = SKAction.sequence([ActionMove,actionremove])
-        croc.run(actionsequence)
-    }
-
-       //this function checks for collisions between the koala and obstacles
+    
+    //this function checks for collisions between the koala and obstacles
     func checkCollisions(){
         var hitObstacles : [SKSpriteNode] = []
         //find obstacles colliding with the koala
         enumerateChildNodes(withName: "snake", using: {
             node, _ in
-            
             //get a reference to node that was found
             let obstacle = node as! SKSpriteNode
             //check to see if the obstacle is intersecting with the koala
@@ -125,8 +103,50 @@ class GameScene: SKScene {
         scorelabel.text = String(score)
         //snake node is removed from the program
         obstacle.removeFromParent()
+    }
+    func spawncroc(){
+        let croc = SKSpriteNode(imageNamed: "croc")
+        croc.setScale(1)
+        let horizontalposition = CGFloat(arc4random_uniform(UInt32(size.height)))
+        //create instance of the obstacle
+        //defines the starting position of obstacle
+        let startingposition = CGPoint(x: horizontalposition+700, y: 100)
+        croc.position = startingposition
+        //create a name for the obstacle
+        croc.name = "croc"
+        addChild(croc)
+        let endingposition = CGPoint(x:0, y: 100)
+        
+        let ActionMove = SKAction.move(to: endingposition, duration: 10)
+        let actionremove = SKAction.removeFromParent()
+        //defines sequence for what should happen for the croc node
+        //it moves horizontally across the screen and if it goes off then it is removed from the game
+        //ActionMove is run and actionremove is removing the node
+        let actionsequence = SKAction.sequence([ActionMove,actionremove])
+        croc.run(actionsequence, withKey:"crocodilehit")
         
     }
+    
+    var hitCroc : [SKSpriteNode] = []
+    //find obstacles colliding with the koala
+    enumerateChildNodes(withName: "croc", using: {
+    node, _ in
+    //get a reference to node that was found
+    let croc = node as! SKSpriteNode
+    //check to see if the obstacle is intersecting with the koala
+    if croc.frame.insetBy(dx:20,dy: 50).intersects(self.koala.frame.insetBy(dx:5,dy:10)){
+    hitCroc.append(croc)
+    }
+    })
+    for croc in hitCroc{
+    koalaHit(by: croc)
+    }
 }
+func koalaHit(by croc: SKSpriteNode){
+    //snake node is removed from the program
+    croc.removeAction(forKey: "crocodilehit")
+}
+
+
 
 
