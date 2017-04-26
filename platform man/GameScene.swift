@@ -102,22 +102,40 @@ class GameScene: SKScene {
 
        //this function checks for collisions between the koala and obstacles
     func checkCollisions(){
-        var hitObstacles : [SKSpriteNode] = []
-        //find obstacles colliding with the koala
-        enumerateChildNodes(withName: "snake", using: {
-            node, _ in
+        
+        var hitSnakes : [SKSpriteNode] = []
+
+        // Iterate over all the child nodes in the scene
+        for node in self.children {
             
-            //get a reference to node that was found
-            let obstacle = node as! SKSpriteNode
-            //check to see if the obstacle is intersecting with the koala
-            if obstacle.frame.insetBy(dx:20,dy: 50).intersects(self.koala.frame.insetBy(dx:5,dy:10)){
-                hitObstacles.append(obstacle)
+            // Only check on nodes that have a name
+            if let nodeName = node.name {
+                
+                // Is this is a snake or a koala?
+                if nodeName == "snake" {
+
+                    //get a reference to node that was found
+                    let obstacle = node as! SKSpriteNode
+                    //check to see if the obstacle is intersecting with the koala
+                    if obstacle.frame.insetBy(dx:20,dy: 50).intersects(self.koala.frame.insetBy(dx:5,dy:10)){
+                        hitSnakes.append(obstacle)
+                    }
+                    
+                } else if nodeName == "croc" {
+                    
+                    // Game over
+                    print("game over, man")
+                }
             }
-        })
-        for obstacle in hitObstacles{
-            koalaHit(by: obstacle)
+            
+        }
+        
+        // Do what we need to do when the koala hero is hit by a snake
+        for snake in hitSnakes{
+            koalaHit(by: snake)
         }
     }
+    
     func koalaHit(by obstacle: SKSpriteNode){
         //reduce the score
         score+=1
