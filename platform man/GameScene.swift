@@ -9,15 +9,30 @@
 import SpriteKit
 
 
+
 class GameScene: SKScene {
+ 
     let koala = SKSpriteNode(imageNamed: "koala") // we want to be able to manipulate the koala for the game
     //label a variable to track score
     
     let scorelabel = SKLabelNode(fontNamed: "Cambria")
     var score = 0 //this tracks score
-    
+
     
     override func didMove(to view: SKView){
+//        let gameActive = true
+//        if gameActive == false{
+//            let gameover = SKLabelNode(fontNamed: "Times New Roman")
+//            gameover.text = "Game Over!"
+//            gameover.fontSize = 65
+//            gameover.fontColor = SKColor.green
+//            gameover.position = CGPoint(x: frame.midX, y: frame.midY)
+//            addChild(gameover)
+//          
+//        }
+//        else
+//        {
+//        }
         backgroundColor = SKColor.black
         let background = SKSpriteNode(imageNamed: "forest")
         background.position = CGPoint(x:size.width/2, y:size.height/2)//anchor image middle of screen horizontally and vertically as well
@@ -49,6 +64,7 @@ class GameScene: SKScene {
         let crocactionsequence = SKAction.sequence([crocspawnwait,crocactionspawn])
         let crocactionobstaclerepeat = SKAction.repeatForever(crocactionsequence)
         run(crocactionobstaclerepeat)//function will now repeat itself forever
+     
     }
     //this function moves about 60 times per second
     override func update(_ currentTime: TimeInterval) {
@@ -90,23 +106,26 @@ class GameScene: SKScene {
         croc.name = "croc"
         addChild(croc)
         let endingposition = CGPoint(x:0, y: 100)
-        
         let ActionMove = SKAction.move(to: endingposition, duration: 10)
         let actionremove = SKAction.removeFromParent()
         //defines sequence for what should happen for the croc node
         //it moves horizontally across the screen and if it goes off then it is removed from the game
         //ActionMove is run and actionremove is removing the node
         let actionsequence = SKAction.sequence([ActionMove,actionremove])
-        croc.run(actionsequence)
+         croc.run(actionsequence)
+       // croc.run(actionsequence, withKey: "crochit")
+       
     }
 
        //this function checks for collisions between the koala and obstacles
     func checkCollisions(){
         
         var hitSnakes : [SKSpriteNode] = []
+   
 
         // Iterate over all the child nodes in the scene
         for node in self.children {
+            
             
             // Only check on nodes that have a name
             if let nodeName = node.name {
@@ -124,10 +143,21 @@ class GameScene: SKScene {
                 } else if nodeName == "croc" {
                     
                     // Game over
-                    print("game over, man")
-                }
+                    print("game over")
+                    let koala = node as! SKSpriteNode
+                    //check to see if the obstacle is intersecting with the koala
+                    if koala.frame.insetBy(dx:20,dy: 50).intersects(self.koala.frame.insetBy(dx:5,dy:10)){
+//                        let gameActive = false
+                        let gameover = SKLabelNode(fontNamed: "Times New Roman")
+                        gameover.text = "Game Over!"
+                        gameover.fontSize = 65
+                        gameover.fontColor = SKColor.green
+                        gameover.position = CGPoint(x: frame.midX, y: frame.midY)
+                        addChild(gameover)
+                    }
+
+                                   }
             }
-            
         }
         
         // Do what we need to do when the koala hero is hit by a snake
@@ -146,5 +176,6 @@ class GameScene: SKScene {
         
     }
 }
+
 
 
