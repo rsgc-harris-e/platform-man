@@ -18,11 +18,11 @@ class GameScene: SKScene {
     let scorelabel = SKLabelNode(fontNamed: "Cambria")
     var score = 0 //this tracks score
     var gameActive = true
-
+    
     
     override func didMove(to view: SKView){
         let gameActive = true
-       
+        
         backgroundColor = SKColor.black
         let background = SKSpriteNode(imageNamed: "forest")
         background.position = CGPoint(x:size.width/2, y:size.height/2)//anchor image middle of screen horizontally and vertically as well
@@ -37,25 +37,25 @@ class GameScene: SKScene {
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         //periodically spawns obstacles
         if gameActive == true{
-        let spawnwait = SKAction.wait(forDuration:4) //set time between obstacle spawns
-        let actionspawn = SKAction.run() {[weak self]in self?.spawnobstacle()} //tell run function what function should be run
-        let actionsequence = SKAction.sequence([spawnwait,actionspawn])
-        let actionobstaclerepeat = SKAction.repeatForever(actionsequence)
-        run(actionobstaclerepeat)//function will now repeat itself forever
-        //add display to show the score
-        scorelabel.text = String(score)
-        scorelabel.color = SKColor.red
-        scorelabel.fontSize = 96
-        scorelabel.zPosition = 150 //make sure display is above all other things in the scene
-        scorelabel.position = CGPoint(x:size.width - size.width/2, y: size.height - size.height/4)
-        addChild(scorelabel)
-        let crocspawnwait = SKAction.wait(forDuration:5) //set time between obstacle spawns
-        let crocactionspawn = SKAction.run() {[weak self]in self?.spawncroc()} //tell run function what function should be run
-        //to avoid a memory leak we run the function with a "weak reference"
-        let crocactionsequence = SKAction.sequence([crocspawnwait,crocactionspawn])
-        let crocactionobstaclerepeat = SKAction.repeatForever(crocactionsequence)
-        run(crocactionobstaclerepeat)//function will now repeat itself forever
-    }
+            let spawnwait = SKAction.wait(forDuration:4) //set time between obstacle spawns
+            let actionspawn = SKAction.run() {[weak self]in self?.spawnobstacle()} //tell run function what function should be run
+            let actionsequence = SKAction.sequence([spawnwait,actionspawn])
+            let actionobstaclerepeat = SKAction.repeatForever(actionsequence)
+            run(actionobstaclerepeat)//function will now repeat itself forever
+            //add display to show the score
+            scorelabel.text = String(score)
+            scorelabel.color = SKColor.red
+            scorelabel.fontSize = 96
+            scorelabel.zPosition = 150 //make sure display is above all other things in the scene
+            scorelabel.position = CGPoint(x:size.width - size.width/2, y: size.height - size.height/4)
+            addChild(scorelabel)
+            let crocspawnwait = SKAction.wait(forDuration:5) //set time between obstacle spawns
+            let crocactionspawn = SKAction.run() {[weak self]in self?.spawncroc()} //tell run function what function should be run
+            //to avoid a memory leak we run the function with a "weak reference"
+            let crocactionsequence = SKAction.sequence([crocspawnwait,crocactionspawn])
+            let crocactionobstaclerepeat = SKAction.repeatForever(crocactionsequence)
+            run(crocactionobstaclerepeat)//function will now repeat itself forever
+        }
     }
     //this function moves about 60 times per second
     override func update(_ currentTime: TimeInterval) {
@@ -64,54 +64,54 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if gameActive == true{       //get location of
-        if let body = koala.physicsBody{
-           if koala.position.y > 0 {
-            body.applyImpulse(CGVector(dx:0,dy: 1500))
-         }
-        }
+            if let body = koala.physicsBody{
+                if koala.position.y < 200 {
+                    body.applyImpulse(CGVector(dx:0,dy: 1500))
+                }
+            }
         }
         
     }
     //simple method for a sprite
     func spawnobstacle(){
         if gameActive == true{
-        //create instance of the obstacle
-        let snake = SKSpriteNode(imageNamed: "snake")
-        snake.setScale(0.5)
-        //defines the starting position of obstacle
-        let startingposition = CGPoint(x: 2000, y: 60)
-        snake.position = startingposition
-        //create a name for the obstacle
-        snake.name = "snake"
-        addChild(snake)
-        let endingposition = CGPoint(x:0, y: 60)
-        let ActionMove = SKAction.move(to: endingposition, duration: 10)
-        let actionremove = SKAction.removeFromParent()
-        let actionsequence = SKAction.sequence([ActionMove,actionremove])
-        snake.run(actionsequence)
+            //create instance of the obstacle
+            let snake = SKSpriteNode(imageNamed: "snake")
+            snake.setScale(0.5)
+            //defines the starting position of obstacle
+            let startingposition = CGPoint(x: 2000, y: 60)
+            snake.position = startingposition
+            //create a name for the obstacle
+            snake.name = "snake"
+            addChild(snake)
+            let endingposition = CGPoint(x:0, y: 60)
+            let ActionMove = SKAction.move(to: endingposition, duration: 10)
+            let actionremove = SKAction.removeFromParent()
+            let actionsequence = SKAction.sequence([ActionMove,actionremove])
+            snake.run(actionsequence)
         }
     }
     func spawncroc(){
         if gameActive == true{
-        let croc = SKSpriteNode(imageNamed: "croc")
-        croc.setScale(1)
-        let horizontalposition = CGFloat(arc4random_uniform(UInt32(size.height)))
-        //create instance of the obstacle
-        //defines the starting position of obstacle
-        let startingposition = CGPoint(x: horizontalposition+2000, y: 60)
-        croc.position = startingposition
-        //create a name for the obstacle
-        croc.name = "croc"
-        addChild(croc)
-        let endingposition = CGPoint(x:0, y: 100)
-        let ActionMove = SKAction.move(to: endingposition, duration: 10)
-        let actionremove = SKAction.removeFromParent()
-        //defines sequence for what should happen for the croc node
-        //it moves horizontally across the screen and if it goes off then it is removed from the game
-        //ActionMove is run and actionremove is removing the node
-        let actionsequence = SKAction.sequence([ActionMove,actionremove])
-        croc.run(actionsequence)
-        // croc.run(actionsequence, withKey: "crochit")
+            let croc = SKSpriteNode(imageNamed: "croc")
+            croc.setScale(1)
+            let horizontalposition = CGFloat(arc4random_uniform(UInt32(size.height)))
+            //create instance of the obstacle
+            //defines the starting position of obstacle
+            let startingposition = CGPoint(x: horizontalposition+2000, y: 60)
+            croc.position = startingposition
+            //create a name for the obstacle
+            croc.name = "croc"
+            addChild(croc)
+            let endingposition = CGPoint(x:0, y: 100)
+            let ActionMove = SKAction.move(to: endingposition, duration: 10)
+            let actionremove = SKAction.removeFromParent()
+            //defines sequence for what should happen for the croc node
+            //it moves horizontally across the screen and if it goes off then it is removed from the game
+            //ActionMove is run and actionremove is removing the node
+            let actionsequence = SKAction.sequence([ActionMove,actionremove])
+            croc.run(actionsequence)
+            // croc.run(actionsequence, withKey: "crochit")
         }
     }
     
@@ -164,12 +164,12 @@ class GameScene: SKScene {
     
     func koalaHit(by obstacle: SKSpriteNode){
         if gameActive == true {
-        //reduce the score
-        score+=1
-        //update score label
-        scorelabel.text = String(score)
-        //snake node is removed from the program
-        obstacle.removeFromParent()
+            //reduce the score
+            score+=1
+            //update score label
+            scorelabel.text = String(score)
+            //snake node is removed from the program
+            obstacle.removeFromParent()
         }
-}
+    }
 }
